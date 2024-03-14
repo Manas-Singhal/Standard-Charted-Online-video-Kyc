@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Submission</title>
+    <link rel="stylesheet" href="photo.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Submit Documents</h1>
+        <form action="/submit_documents" method="post" enctype="multipart/form-data">
+            <label for="photo">Photo:</label><br>
+            <input type="file" id="photo" name="photo" accept="image/*">
+            <input type="text" id="photo_text" readonly>
+            <button type="button" onclick="document.getElementById('photo').click()">Choose File</button><br><br>
+
+            <label for="aadhaar">Aadhaar Card:</label><br>
+            <input type="file" id="aadhaar" name="aadhaar" accept="image/*">
+            <input type="text" id="aadhaar_text" readonly>
+            <button type="button" onclick="document.getElementById('aadhaar').click()">Choose File</button><br><br>
+
+            <label for="pan">Pan Card:</label><br>
+            <input type="file" id="pan" name="pan" accept="image/*">
+            <input type="text" id="pan_text" readonly>
+            <button type="button" onclick="document.getElementById('pan').click()">Choose File</button><br><br>
+
+            <div class="inputBox">
+                <button type="button" id="startRecordBtn">Start Video</button>
+                <button type="button" id="stopRecordBtn" disabled>Stop Video</button>
+            </div>
+
+            <video id="video" autoplay muted></video>
+            <video id="preview" controls style="display: none;"></video>
+        </form>
+    </div>
+
+    <script>
+        let videoStream;
+        let mediaRecorder;
+        const recordedChunks = [];
+
+        document.getElementById('photo').addEventListener('change', function() {
+            document.getElementById('photo_text').value = this.value;
+        });
+
+        document.getElementById('aadhaar').addEventListener('change', function() {
+            document.getElementById('aadhaar_text').value = this.value;
+        });
+
+        document.getElementById('pan').addEventListener('change', function() {
+            document.getElementById('pan_text').value = this.value;
+        });
+
+        document.getElementById('startRecordBtn').addEventListener('click', startRecording);
+        document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
+
+        async function startRecording() {
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({
+                    video: true
+                });
+                document.getElementById('video').srcObject = videoStream;
+                mediaRecorder = new MediaRecorder(videoStream);
+                mediaRecorder.ondataavailable = handleDataAvailable;
+                mediaRecorder.start();
+                document.getElementById('startRecordBtn').disabled = true;
+                document.getElementById('stopRecordBtn').disabled = false;
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+            }
+        }
+
+        function handleDataAvailable(event) {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                document.getElementById('startRecordBtn').disabled = false;
+                document.getElementById('stopRecordBtn').disabled = true;
+                videoStream.getTracks().forEach(track => track.stop());
+                const blob = new Blob(recordedChunks, {
+                    type: 'video/webm'
+                });
+                const url = URL.createObjectURL(blob);
+                document.getElementById('preview').src = url;
+                document.getElementById('preview').style.display = 'block';
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1/firebase.js"></script>
+    <script src="./photo.js"></script>
+</body>
+
+</html>
